@@ -295,7 +295,9 @@ const Instauto = async (db, browser, options) => {
         logger.log('Unable to intercept request, will send manually');
         try {
           await page.evaluate(async (username2) => {
+            // logger.log('https://i.instagram.com/api/v1/users/web_profile_info/?username='+encodeURIComponent(username2.toLowerCase()));
             const response = await window.fetch(`https://i.instagram.com/api/v1/users/web_profile_info/?username=${encodeURIComponent(username2.toLowerCase())}`, { mode: 'cors', credentials: 'include', headers: { 'x-ig-app-id': '936619743392459' } });
+            // await debug.log(response);
             await response.json(); // else it will not finish the request
           }, username);
           // todo `https://i.instagram.com/api/v1/users/${userId}/info/`
@@ -814,6 +816,7 @@ const Instauto = async (db, browser, options) => {
 
     for (const username of usersToFollowFollowersOfSliced) {
       try {
+        console.log(' index.js [username : ]' + username);
         await processUserFollowers(username, { maxFollowsPerUser, skipPrivate, enableLikeImages, likeImagesMin, likeImagesMax });
 
         await sleep(10 * 60 * 1000);

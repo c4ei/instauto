@@ -1,6 +1,11 @@
 'use strict';
 
 const puppeteer = require('puppeteer'); // eslint-disable-line import/no-extraneous-dependencies
+const path = require('path');
+require('dotenv').config({ path: path.join(__dirname, '.env') });
+const dotenv = require('dotenv');
+
+dotenv.config();
 
 const Instauto = require('.');
 // or:
@@ -78,7 +83,7 @@ const options = {
   try {
     browser = await puppeteer.launch({
       // set headless: false first if you need to debug and see how it works
-      headless: true,
+      headless: false,
 
       args: [
         // Needed for docker
@@ -93,13 +98,15 @@ const options = {
     // Create a database where state will be loaded/saved to
     const instautoDb = await Instauto.JSONDB({
       // Will store a list of all users that have been followed before, to prevent future re-following.
+      // 향후 다시 팔로우하는 것을 방지하기 위해 이전에 팔로우한 모든 사용자 목록을 저장합니다.
       followedDbPath: './followed.json',
       // Will store all unfollowed users here
+      // 팔로우하지 않은 모든 사용자를 여기에 저장합니다.
       unfollowedDbPath: './unfollowed.json',
       // Will store all likes here
       likedPhotosDbPath: './liked-photos.json',
     });
-
+    console.log(process.env.INSTAGRAM_USERNAME);
     const instauto = await Instauto(instautoDb, browser, options);
 
     // This can be used to unfollow people:
@@ -118,6 +125,8 @@ const options = {
     // List of usernames that we should follow the followers of, can be celebrities etc.
     const usersToFollowFollowersOf = process.env.USERS_TO_FOLLOW != null ? process.env.USERS_TO_FOLLOW.split(',') : [];
 
+    // console.log('usersToFollowFollowersOf:' + usersToFollowFollowersOf.toString() );
+
     // Now go through each of these and follow a certain amount of their followers
     await instauto.followUsersFollowers({
       usersToFollowFollowersOf,
@@ -131,7 +140,7 @@ const options = {
 
     console.log('Done running');
 
-    await instauto.sleep(30000);
+    await instauto.sleep(30 * 1000);
   } catch (err) {
     console.error(err);
   } finally {

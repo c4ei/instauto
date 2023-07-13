@@ -1,0 +1,11 @@
+start.txt
+----------------------
+pm2 start instabot.yml
+pm2 save
+pm2 startup
+----------------------
+
+
+ Run `yarn add puppeteer instauto`
+cd /home/dev/www/facebook/instauto
+node example
