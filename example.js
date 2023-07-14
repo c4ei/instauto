@@ -83,7 +83,7 @@ const options = {
   try {
     browser = await puppeteer.launch({
       // set headless: false first if you need to debug and see how it works
-      headless: false,
+      headless: true,
 
       args: [
         // Needed for docker
@@ -126,6 +126,8 @@ const options = {
     const usersToFollowFollowersOf = process.env.USERS_TO_FOLLOW != null ? process.env.USERS_TO_FOLLOW.split(',') : [];
 
     // console.log('usersToFollowFollowersOf:' + usersToFollowFollowersOf.toString() );
+
+    // console.log(usersToFollowFollowersOf);
 
     // Now go through each of these and follow a certain amount of their followers
     await instauto.followUsersFollowers({
